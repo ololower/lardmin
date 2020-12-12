@@ -33,11 +33,14 @@ class LardminBaseController extends BaseController {
                 return $item['section_key'] == $nav_menu_section['key'];
             });
 
-            $nav_menu[] = [
-                'key' => $nav_menu_section['key'],
-                'title' => $nav_menu_section['title'],
-                'items' => $sub_menu_items
-            ];
+            if ($sub_menu_items->isNotEmpty()) {
+                $nav_menu[] = [
+                    'key' => $nav_menu_section['key'],
+                    'title' => $nav_menu_section['title'],
+                    'items' => $sub_menu_items
+                ];
+            }
+
         }
 
         view()->share('nav_menu', $nav_menu);

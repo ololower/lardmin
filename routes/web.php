@@ -13,14 +13,9 @@ Route::prefix(config('lardmin.admin_url_prefix'))
     foreach (config('lardmin.nav_menu_items') as $nav_menu_item) {
         if (isset($nav_menu_item['model'])) {
             $url_path = str_replace("\\", "_", strtolower($nav_menu_item['model']));
-            //dump($url_path);
             Route::get($url_path, [Lardmin::class, 'index']);
         }
     }
 
 });
 
-//dd(Route::getRoutes());
-
-
-//Route::get('/lardmin', \Ctrlv\Lardmin\Http\Controllers\LardminUserController::class, 'index');

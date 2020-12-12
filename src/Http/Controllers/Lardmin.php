@@ -13,6 +13,9 @@ class Lardmin extends LardminBaseController
 
     public function __construct(Request $request) {
         parent::__construct();
+
+
+        dump($request->route()->getPrefix());
 //        $this->model = new $modelName();
     }
 
@@ -31,4 +34,6 @@ class Lardmin extends LardminBaseController
     public function delete() {
         //
     }
+
+    
 }
