@@ -1,0 +1,22 @@
+{
+    "name": "lolwe/lardmin",
+    "description": "Lardmin - one else admin panel for laravel.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anatolii Koziura",
+            "email": "anatolii.koziura@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Ctrlv\\Lardmin\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.2",
+        "illuminate/support": "^8.0"
+    }
+}
