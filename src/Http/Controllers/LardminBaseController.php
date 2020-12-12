@@ -33,7 +33,6 @@ class LardminBaseController extends BaseController {
                 return $item['section_key'] == $nav_menu_section['key'];
             });
 
-
             $nav_menu[] = [
                 'key' => $nav_menu_section['key'],
                 'title' => $nav_menu_section['title'],

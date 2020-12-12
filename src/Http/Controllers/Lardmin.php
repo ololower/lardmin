@@ -3,15 +3,17 @@
 namespace Ctrlv\Lardmin\Http\Controllers;
 
 
+use Illuminate\Http\Request;
+
 class Lardmin extends LardminBaseController
 {
     protected $modelName;
     protected $model;
 
 
-    public function __construct($modelName) {
+    public function __construct(Request $request) {
         parent::__construct();
-        $this->model = new $modelName();
+//        $this->model = new $modelName();
     }
 
     public function index() {
