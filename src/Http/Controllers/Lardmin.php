@@ -3,6 +3,7 @@
 namespace Ctrlv\Lardmin\Http\Controllers;
 
 
+use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
 use Illuminate\Http\Request;
 
 class Lardmin extends LardminBaseController
@@ -14,9 +15,7 @@ class Lardmin extends LardminBaseController
     public function __construct(Request $request) {
         parent::__construct();
 
-
-        dump($request->route()->getPrefix());
-//        $this->model = new $modelName();
+        $this->model = ModelUrlTransformer::toModel($request->route()->uri());
     }
 
     public function index() {
@@ -35,5 +34,5 @@ class Lardmin extends LardminBaseController
         //
     }
 
-    
+
 }
