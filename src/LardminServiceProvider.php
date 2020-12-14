@@ -2,6 +2,7 @@
 
 namespace Ctrlv\Lardmin;
 
+use Ctrlv\Lardmin\ContentBuilder\ContentBuilderDirector;
 use \Illuminate\Support\ServiceProvider;
 
 class LardminServiceProvider extends ServiceProvider {
@@ -23,6 +24,11 @@ class LardminServiceProvider extends ServiceProvider {
 
     public function register()
     {
+        // Строитель контента для админ панельки
+//        $this->app->bind(ContentBuilderDirector::class, function ($app) {
+//            return new ContentBuilderDirector();
+//        });
+
         $this->mergeConfigFrom(self::CONFIG_PATH, 'lardmin');
     }
 
