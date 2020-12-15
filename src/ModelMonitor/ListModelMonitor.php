@@ -2,19 +2,26 @@
 
 namespace Ctrlv\Lardmin\ModelMonitor;
 
-use Ctrlv\Lardmin\ClientInterfaces\LardminList;
-use Illuminate\Database\Eloquent\Model;
 
 class ListModelMonitor extends ModelMonitor {
 
+
     protected function setLocalProperty(): void
     {
-        if ($this->model instanceof LardminList) {
-            $_props = collect(['id']);
-            $this->property = $_props->merge($this->model->getListProps())->toArray();
-        } else {
-            $this->property = ['id']; // По умолчанию выводим только id
-        }
+        $customer_props = collect($this->model->listProps ?? []);
+
+        // Добавляем id во все таблицы
+        !$customer_props->has('id') ? $customer_props->prepend('id') : null;
+
+        $this->property = $customer_props->toArray();
+
     }
+
+    public function getPropertyTitle($property_name) {
+        $props_names = $this->model->listPropsNames;
+
+        return isset($props_names[$property_name]) ? $props_names[$property_name] : $property_name;
+    }
+
 
 }

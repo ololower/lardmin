@@ -20,20 +20,20 @@
 
         @include('lardmin::layout.main-content-heading')
 
-        <div class="p-6 bg-gray-100 mb-20">
+        <div class="p-8 bg-gray-100 mb-20">
 
             <div id="home">
                 @yield('content')
             </div>
 
-            <div class="w-full border-t-2 px-8 py-6 lg:flex justify-between items-center">
-                <p class="mb-2 lg:mb-0">© Copyright 2020</p>
-                <div class="flex">
-                    <a href="#" class="mr-6 hover:text-gray-900">Terms of Service</a>
-                    <a href="#" class="mr-6 hover:text-gray-900">Privacy Policy</a>
-                    <a href="#" class="hover:text-gray-900">About Us</a>
-                </div>
-            </div>
+{{--            <div class="w-full border-t-2 px-8 py-6 lg:flex justify-between items-center">--}}
+{{--                <p class="mb-2 lg:mb-0">© Copyright 2020</p>--}}
+{{--                <div class="flex">--}}
+{{--                    <a href="#" class="mr-6 hover:text-gray-900">Документация</a>--}}
+{{--                    <a href="#" class="mr-6 hover:text-gray-900">Поддержать проект</a>--}}
+{{--                    <a href="#" class="hover:text-gray-900">Дополнения</a>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
     </div>
 </div>

@@ -51,13 +51,21 @@ class Lardmin extends LardminBaseController
 
         $monitor->watch($this->model);
         $props = $monitor->getProperties();
-        $paginated = $this->model->select($props)->paginate(15);
+
+        $paginated = $this->model->paginate(15);
 
         $results = [];
         foreach ($paginated as $item) {
             $_result = [];
-            foreach ($props as $prop) {
-                $_result[] = $item->{$prop};
+            foreach ($props as $key => $prop) {
+
+                if (is_callable($prop)) {
+                    $value = $prop($item->{$key});
+                } else {
+                    $value = $item->{$prop};
+                }
+
+                $_result[] = $value;
             }
             $results[] = $_result;
         }
@@ -69,7 +77,14 @@ class Lardmin extends LardminBaseController
         // todo логика для сортировки записей
         // todo логика для фильтрафии записей
 
-        $pageContent->push((new Table($props, $results)));
+        $titles = collect($props)->map(function ($item, $key) use ($monitor) {
+            $property_name = (is_callable($item)) ? $key : $item;
+            return $monitor->getPropertyTitle($property_name);
+        })->toArray();
+
+        $table = new Table($titles, $results);
+        $table->setPagination($paginated->links());
+        $pageContent->push($table);
 
         // todo добавить вывод пагинации
 
