@@ -1,7 +1,6 @@
 <?php
 namespace Ctrlv\Lardmin\ContentBuilder\Elements\Breadcrumbs;
 
-use Ctrlv\Lardmin\ContentBuilder\Elements\ContentElement;
 use Ctrlv\Lardmin\ContentBuilder\Elements\FlatContentElement;
 
 /**

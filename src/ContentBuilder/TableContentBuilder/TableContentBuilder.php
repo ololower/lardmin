@@ -33,7 +33,6 @@ class TableContentBuilder extends ContentBuilderMaster implements ContentBuilder
 
         // Возвращаем верстку для таблиц
 
-        // Достаем только нужные поля
         $column_names = $this->outputConfiguration->flatMap(function ($column) {
             if (is_array($column['content'])) {
                 return $column['content'];

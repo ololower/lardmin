@@ -6,8 +6,10 @@ namespace Ctrlv\Lardmin\Http\Controllers;
 use App\Models\User;
 use Ctrlv\Lardmin\ContentBuilder\ContentBuilderDirector;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Breadcrumbs\Breadcrumbs;
+use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
 use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
+use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
 use Illuminate\Http\Request;
 use Ctrlv\Lardmin\ContentBuilder\PageContent;
 
@@ -29,7 +31,12 @@ class Lardmin extends LardminBaseController
         $this->model = ModelUrlTransformer::toModel($request->route()->uri());
     }
 
-    public function index() {
+    /**
+     * Список записей
+     * @param ListModelMonitor $monitor
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(ListModelMonitor $monitor) {
 
         $breadcrumbs = [
             [
@@ -42,37 +49,33 @@ class Lardmin extends LardminBaseController
             ]
         ];
 
+        $monitor->watch($this->model);
+        $props = $monitor->getProperties();
+        $paginated = $this->model->select($props)->paginate(15);
+
+        $results = [];
+        foreach ($paginated as $item) {
+            $_result = [];
+            foreach ($props as $prop) {
+                $_result[] = $item->{$prop};
+            }
+            $results[] = $_result;
+        }
 
         $pageContent = new FullWidthContent();
         $pageContent->setHeading("Это просто заголовок");
-//        $pageContent->setActions("Это просто заголовок");
         $pageContent->setBreadcrumbs($breadcrumbs);
-        //$pageContent->addContentElement();
-//        $pageContent->addContentElement();
+
+        // todo логика для сортировки записей
+        // todo логика для фильтрафии записей
+
+        $pageContent->push((new Table($props, $results)));
+
+        // todo добавить вывод пагинации
+
 
         return $pageContent->getPageContent();
-        // Поля задаются юзером для кастомизации вывода в таблицах
-        $custom_columns = [
-            [
-                'title' => 'ID',
-                'content' => 'id' // column name, allowed: 'column1' || 'column1, column2' || ['column1', 'column2']
-            ],
-            [
-                'title' => 'Имя пользователя',
-                'content' => 'name, email'
-            ],
-            [
-                'title' => 'Имя пользователя',
-                'content' => ['name', 'email']
-            ]
-        ];
 
-//        $content = $builderDirector->buildTable($this->model, $custom_columns);
-
-        return view(self::VIEW_LIST_NAME)->with([
-            //'content' => $content,
-            'records' => collect([]),
-        ]);
     }
 
     public function show() {
