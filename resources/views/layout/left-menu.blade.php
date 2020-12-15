@@ -5,10 +5,10 @@
             <p class="pl-4 text-sm font-semibold mb-1 uppercase">{{ $nav_menu_section['title'] }}</p>
 
             @foreach($nav_menu_section['items'] as $sub_menu_item)
-                <div class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
+                <a href="#" class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
                     {!!  $sub_menu_item['svg'] ?? null  !!}
                     <span class="text-gray-700">{{ $sub_menu_item['title'] }}</span>
-                </div>
+                </a>
             @endforeach
 {{--        <div class="w-full flex items-center text-blue-400 h-10 pl-4 bg-gray-200 hover:bg-gray-200 rounded-lg cursor-pointer">--}}
 {{--            <svg viewBox="0 0 20 20" class="h-6 w-6 fill-current mr-2">--}}
