@@ -8,6 +8,7 @@ use Ctrlv\Lardmin\ContentBuilder\ContentBuilderDirector;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Breadcrumbs\Breadcrumbs;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
+use Ctrlv\Lardmin\Generators\BreadcrumbGenerator;
 use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
 use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
 use Illuminate\Http\Request;
@@ -24,11 +25,18 @@ class Lardmin extends LardminBaseController
 
     protected $model;
 
+    /**
+     * Генератор хлебных крошек
+     * @var BreadcrumbGenerator
+     */
+    private $breadcrumb_generator;
 
     public function __construct(Request $request) {
         parent::__construct();
 
         $this->model = ModelUrlTransformer::toModel($request->route()->uri());
+
+        $this->breadcrumb_generator = new BreadcrumbGenerator($request->route()->uri());
     }
 
     /**
@@ -37,17 +45,6 @@ class Lardmin extends LardminBaseController
      * @return \Illuminate\Contracts\View\View
      */
     public function index(ListModelMonitor $monitor) {
-
-        $breadcrumbs = [
-            [
-                'name' => 'Хлебная',
-                'url' => '#'
-            ],
-            [
-                'name' => 'Хлебная',
-                'url' => '#'
-            ]
-        ];
 
         $monitor->watch($this->model);
         $props = $monitor->getProperties();
@@ -72,11 +69,12 @@ class Lardmin extends LardminBaseController
 
         $pageContent = new FullWidthContent();
         $pageContent->setHeading("Это просто заголовок");
-        $pageContent->setBreadcrumbs($breadcrumbs);
+        $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
 
         // todo логика для сортировки записей
         // todo логика для фильтрафии записей
 
+        // Заголовки таблицы
         $titles = collect($props)->map(function ($item, $key) use ($monitor) {
             $property_name = (is_callable($item)) ? $key : $item;
             return $monitor->getPropertyTitle($property_name);
@@ -85,9 +83,6 @@ class Lardmin extends LardminBaseController
         $table = new Table($titles, $results);
         $table->setPagination($paginated->links());
         $pageContent->push($table);
-
-        // todo добавить вывод пагинации
-
 
         return $pageContent->getPageContent();
 

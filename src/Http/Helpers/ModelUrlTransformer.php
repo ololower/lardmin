@@ -3,6 +3,12 @@ namespace Ctrlv\Lardmin\Http\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Какая-то фигня если честно.
+ * todo переписать на класс для нормальной работы с uri
+ * Class ModelUrlTransformer
+ * @package Ctrlv\Lardmin\Http\Helpers
+ */
 final class ModelUrlTransformer {
 
     /**
@@ -35,6 +41,22 @@ final class ModelUrlTransformer {
             $error_message = "Cant transform {$model_path} to model. \r\n Be sure that your model name is in \"ucfirst\" syntax.";
             throw new \Exception($error_message);
         }
+    }
+
+    public static function getModelClassnameFromUri(string $uri) {
+        $prefix_path = config('lardmin.admin_url_prefix') . '/';
+        $model_path = str_replace($prefix_path, '', $uri);
+
+        return collect(explode("_", $model_path))->map(function ($part) {
+            return ucfirst($part);
+        })->implode('\\');
+    }
+
+    public static function getSingleModelUri(string $uri) {
+        $prefix_path = config('lardmin.admin_url_prefix') . '/';
+        $model_path = str_replace($prefix_path, '', $uri);
+
+        return $model_path;
     }
 
 
