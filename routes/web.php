@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use \Ctrlv\Lardmin\Http\Controllers\Lardmin;
-use \Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
+use \Ctrlv\Lardmin\Generators\UrlGenerator;
 
 Route::prefix(config('lardmin.admin_url_prefix'))
     ->middleware('web') // Todo:: группа роутов для админ панельки
@@ -13,8 +13,9 @@ Route::prefix(config('lardmin.admin_url_prefix'))
      */
     foreach (config('lardmin.nav_menu_items') as $nav_menu_item) {
         if (isset($nav_menu_item['model'])) {
-            $url_path = ModelUrlTransformer::toUrl($nav_menu_item['model']);
-            Route::get($url_path, [Lardmin::class, 'index']);
+            $url_generator = UrlGenerator::getInstanceFromClassname($nav_menu_item['model']);
+//            dd($url_generator->getIndexUrl());
+            Route::get($url_generator->getIndexPath(), [Lardmin::class, 'index']);
         }
     }
 

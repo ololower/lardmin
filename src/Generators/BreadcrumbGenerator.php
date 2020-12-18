@@ -2,8 +2,6 @@
 
 namespace Ctrlv\Lardmin\Generators;
 
-use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
-
 /**
  * Генератор данных для хлебных крошек на основе uri страницы
  *
@@ -11,13 +9,13 @@ use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
  * @package Ctrlv\Lardmin\Generators
  */
 class BreadcrumbGenerator {
-    private $model_classname;
+    private $url_generator;
 
     private $breadcrumb_items = [];
     private $menu_items = [];
 
-    public function __construct($request_uri) {
-        $this->model_classname = ModelUrlTransformer::getModelClassnameFromUri($request_uri);
+    public function __construct(UrlGenerator $url_generator) {
+        $this->url_generator = $url_generator;
 
         $menu_generator = new MenuGenerator();
         $this->menu_items = $menu_generator->getMenuItems();
@@ -37,18 +35,29 @@ class BreadcrumbGenerator {
         ];
     }
 
+    /**
+     * Получить все элементы для хлебных крошек
+     * @return array
+     */
     public function getBreadcrumbsItems() {
         return $this->breadcrumb_items;
     }
 
+    /**
+     * Пытаемся создать URL из текущей модели
+     */
     private function attemptGenerate() {
 
-        // Парсим uri для определения модели
-
-        $current_item = collect($this->menu_items)->firstWhere('model', $this->model_classname);
+        $current_item = collect($this->menu_items)->map(function ($item) {
+            if (isset($item['model'])) {
+                $item['model'] = collect(explode("\\", $item['model']))->map(function ($part) {
+                    return strtolower($part);
+                })->implode('_');
+            }
+            return $item;
+        })->firstWhere('model', $this->url_generator->getIndexPath());
 
         $this->push($current_item['title']);
-//        dd($current_item);
-        //
+
     }
 }

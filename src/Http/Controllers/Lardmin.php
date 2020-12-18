@@ -9,6 +9,7 @@ use Ctrlv\Lardmin\ContentBuilder\Elements\Breadcrumbs\Breadcrumbs;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
 use Ctrlv\Lardmin\Generators\BreadcrumbGenerator;
+use Ctrlv\Lardmin\Generators\UrlGenerator;
 use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
 use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
 use Illuminate\Http\Request;
@@ -31,12 +32,16 @@ class Lardmin extends LardminBaseController
      */
     private $breadcrumb_generator;
 
-    public function __construct(Request $request) {
+    public function __construct(Request $request,
+                                UrlGenerator $url_generator,
+                                BreadcrumbGenerator $breadcrumb_generator) {
         parent::__construct();
 
-        $this->model = ModelUrlTransformer::toModel($request->route()->uri());
+        $this->model = $url_generator->getModel();
 
-        $this->breadcrumb_generator = new BreadcrumbGenerator($request->route()->uri());
+        $this->breadcrumb_generator = $breadcrumb_generator;
+
+
     }
 
     /**
