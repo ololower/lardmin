@@ -57,7 +57,8 @@ class BreadcrumbGenerator {
             return $item;
         })->firstWhere('model', $this->url_generator->getIndexPath());
 
-        $this->push($current_item['title']);
+        if ($current_item['title']) $this->push($current_item['title']);
+
 
     }
 }

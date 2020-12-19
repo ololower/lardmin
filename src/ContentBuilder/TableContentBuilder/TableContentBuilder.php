@@ -6,6 +6,11 @@ use Ctrlv\Lardmin\ContentBuilder\ContentBuilder;
 use Ctrlv\Lardmin\ContentBuilder\ContentBuilderMaster;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @deprecated
+ * Class TableContentBuilder
+ * @package Ctrlv\Lardmin\ContentBuilder\TableContentBuilder
+ */
 class TableContentBuilder extends ContentBuilderMaster implements ContentBuilder {
 
     private $items_per_page;

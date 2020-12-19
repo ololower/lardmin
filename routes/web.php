@@ -16,6 +16,7 @@ Route::prefix(config('lardmin.admin_url_prefix'))
             $url_generator = UrlGenerator::getInstanceFromClassname($nav_menu_item['model']);
 //            dd($url_generator->getIndexUrl());
             Route::get($url_generator->getIndexPath(), [Lardmin::class, 'index']);
+            Route::get($url_generator->getCreatePath(), [Lardmin::class, 'create']);
         }
     }
 

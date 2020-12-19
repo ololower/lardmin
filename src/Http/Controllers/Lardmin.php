@@ -4,26 +4,30 @@ namespace Ctrlv\Lardmin\Http\Controllers;
 
 
 use App\Models\User;
-use Ctrlv\Lardmin\ContentBuilder\ContentBuilderDirector;
-use Ctrlv\Lardmin\ContentBuilder\Elements\Breadcrumbs\Breadcrumbs;
+use Ctrlv\Lardmin\ContentBuilder\Elements\Forms\Input;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
+use Ctrlv\Lardmin\ContentBuilder\Presets\SidebarContent;
 use Ctrlv\Lardmin\Generators\BreadcrumbGenerator;
 use Ctrlv\Lardmin\Generators\UrlGenerator;
-use Ctrlv\Lardmin\Http\Helpers\ModelUrlTransformer;
 use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
+use Ctrlv\Lardmin\TableColumnsTransformer\TableColumnsTransformer;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Ctrlv\Lardmin\ContentBuilder\PageContent;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class Lardmin
  * @package Ctrlv\Lardmin\Http\Controllers
- * @property $model
+ * @property Model $model
  */
 class Lardmin extends LardminBaseController
 {
     protected $modelName;
 
+    /**
+     * @var Model
+     */
     protected $model;
 
     /**
@@ -91,6 +95,37 @@ class Lardmin extends LardminBaseController
 
         return $pageContent->getPageContent();
 
+    }
+
+    public function create() {
+        $pageContent = new SidebarContent();
+        $pageContent->setHeading("Добавить...");
+        $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
+
+        // Определение полей основного контента
+        // Основные поля для модели
+        $table_columns_transformer = new TableColumnsTransformer($this->model);
+        $columns = $table_columns_transformer->getMainSectionFields();
+//        $schema_manager = Schema::getConnection()->getDoctrineSchemaManager();
+//        $columns = $schema_manager->listTableColumns($this->model->getTable());
+
+//        dd($columns);
+
+
+        $input = new Input();
+        $pageContent->push($input);
+        $pageContent->push($input);
+        $pageContent->push($input);
+        $pageContent->pushSidebar($input);
+        // Определение полей для зависимостей
+
+
+        //dd($user->first()->getFillable());
+//        dd($this->model);
+        // todo логика для фильтрафии записей
+
+
+        return $pageContent->getPageContent();
     }
 
     public function show() {

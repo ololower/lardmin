@@ -13,6 +13,8 @@ abstract class FlatContentElement implements iElement {
 
     protected $view_params;
 
+    protected $view_name;
+
     public function setViewParams(array $view_params) {
         $this->view_params = $view_params;
     }

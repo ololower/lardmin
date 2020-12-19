@@ -33,7 +33,16 @@ class UrlGenerator {
 
         if ($current_uri) {
             $this->current_uri = $current_uri;
-            $this->index_path = str_replace($prefix_path, '', $current_uri);
+
+            $uri_without_prefix = str_replace($prefix_path, '', $current_uri);
+            $index_path_end_position = strpos($uri_without_prefix, '/');
+            if ($index_path_end_position > 0) {
+                $index_path = substr($uri_without_prefix, 0, $index_path_end_position);
+            } else {
+                $index_path = $uri_without_prefix;
+            }
+
+            $this->index_path = $index_path;
             $this->controller_action = 'index';
         } else {
             // Конфигурация для главной страницы
@@ -59,6 +68,7 @@ class UrlGenerator {
         // Временная проверка, дальше по
         // здесь будет сеттинг для главной страницы и проверка не потребуется
         if ($this->index_path) {
+
             $model_classname = collect(explode("_", $this->index_path))->map(function ($part) {
                 return ucfirst($part);
             })->implode('\\');
@@ -79,6 +89,10 @@ class UrlGenerator {
 
     public function getIndexPath() {
         return $this->index_path;
+    }
+
+    public function getCreatePath() {
+        return $this->index_path . '/create';
     }
 
 
