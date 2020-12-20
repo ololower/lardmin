@@ -5,7 +5,7 @@
             <p class="pl-4 text-sm font-semibold mb-1 uppercase">{{ $nav_menu_section['title'] }}</p>
 
             @foreach($nav_menu_section['items'] as $sub_menu_item)
-                <a href="#" class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
+                <a href="{{ $sub_menu_item['url'] }}" class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
                     {!!  $sub_menu_item['svg'] ?? null  !!}
                     <span class="text-gray-700">{{ $sub_menu_item['title'] }}</span>
                 </a>

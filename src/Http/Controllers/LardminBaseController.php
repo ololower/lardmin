@@ -2,6 +2,7 @@
 
 namespace Ctrlv\Lardmin\Http\Controllers;
 
+use Ctrlv\Lardmin\Generators\UrlGenerator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -24,7 +25,17 @@ class LardminBaseController extends BaseController {
      */
     private function shareNavMenu() {
         $nav_menu_sections = config('lardmin.nav_menu_sections');
-        $nav_menu_items = collect(config('lardmin.nav_menu_items'));
+        $nav_menu_items = collect(config('lardmin.nav_menu_items'))->map(function ($item) {
+            if (isset($item['model'])) {
+                $url_generator = UrlGenerator::getInstanceFromClassname($item['model']);
+                $item['url'] = $url_generator->getIndexUrl();
+            } else {
+                $item['url'] = '#';
+            }
+            return $item;
+        });
+
+
 
         $nav_menu = [];
         foreach ($nav_menu_sections as $nav_menu_section) {

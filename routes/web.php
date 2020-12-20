@@ -5,7 +5,7 @@ use \Ctrlv\Lardmin\Http\Controllers\Lardmin;
 use \Ctrlv\Lardmin\Generators\UrlGenerator;
 
 Route::prefix(config('lardmin.admin_url_prefix'))
-    ->middleware('web') // Todo:: группа роутов для админ панельки
+    ->middleware('web') // Todo:: группа миддлваров для админ панельки
     ->group(function () {
 
     /**
