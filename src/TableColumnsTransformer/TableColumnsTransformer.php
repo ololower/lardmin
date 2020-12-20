@@ -30,7 +30,6 @@ class TableColumnsTransformer {
      * @var array
      */
     private $main_section_columns;
-//    private $main_section_fields;
 
     public function __construct(Model $model) {
         $this->model = $model;
@@ -80,7 +79,4 @@ class TableColumnsTransformer {
 
         return (isset($types_overrides[$db_type])) ? $types_overrides[$db_type] : 'text';
     }
-
-
-//    public function getRelation
 }
