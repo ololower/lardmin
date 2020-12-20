@@ -56,11 +56,14 @@ class TableColumnsTransformer {
      */
     public function getMainSectionFields() {
 
-        return collect($this->main_section_columns)->mapWithKeys(function (Column $column, $column_name) {
+        $names = $this->model->listPropsNames ?? [];
+        return collect($this->main_section_columns)->mapWithKeys(function (Column $column, $column_name) use ($names) {
 
             $props = [
                 'name' => $column->getName(),
                 'type' => $this->convertDbTypeToInputType($column->getType()->getName()),
+                'label' => $names[$column->getName()] ?? $column->getName(),
+//                'readonly' => true,
             ];
 
             return [$column_name => $props];
