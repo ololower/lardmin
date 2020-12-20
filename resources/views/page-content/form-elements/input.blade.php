@@ -1,3 +1,10 @@
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad autem debitis delectus dolor, doloremque, et facilis in libero, magnam maxime quibusdam quo tempore ut voluptates voluptatum. Aliquam in nemo odio!
-</p>
+<div class='w-full md:w-full pr-3 mb-6'>
+    <label class='block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2' for='{{ $id }}'>{{ $label }}</label>
+    <input class='bg-white h-12 w-full px-3 rounded border shadow-inner text-sm focus:outline-none focus:border-gray-400'
+           id='{{ $id }}'
+           type='{{ $type }}'
+           placeholder='{{ $placeholder }}'
+           value="{{ $value }}"
+           @if ($readonly) readonly="true" disabled @endif
+           >
+</div>
