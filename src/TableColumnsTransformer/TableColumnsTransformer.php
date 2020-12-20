@@ -51,11 +51,21 @@ class TableColumnsTransformer {
         $this->main_section_columns = $columns->toArray();
     }
 
+    /**
+     * Поля для вывода
+     * @return \Illuminate\Support\Collection
+     */
     public function getMainSectionFields() {
-        $fields = collect($this->main_section_columns)->mapWithKeys(function (Column $column, $column_name) {
-            return [$column_name => $column->getType()->getName()];
+
+        return collect($this->main_section_columns)->mapWithKeys(function (Column $column, $column_name) {
+
+            $props = [
+                'name' => $column->getName(),
+                'type' => $this->convertDbTypeToInputType($column->getType()->getName()),
+            ];
+
+            return [$column_name => $props];
         });
-        return $fields;
     }
 
     public function getMainSectionValidationRules() {
@@ -63,15 +73,12 @@ class TableColumnsTransformer {
     }
 
     private function convertDbTypeToInputType(string $db_type) {
-        //$input_type = 'inp'
-        switch ($db_type) {
-            case "bigint":
-            case "string":
-                break;
 
-            default:
+        $types_overrides = [
+            'bigint' => 'number'
+        ];
 
-        }
+        return (isset($types_overrides[$db_type])) ? $types_overrides[$db_type] : 'text';
     }
 
 

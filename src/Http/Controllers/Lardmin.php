@@ -11,6 +11,7 @@ use Ctrlv\Lardmin\ContentBuilder\Presets\SidebarContent;
 use Ctrlv\Lardmin\Generators\BreadcrumbGenerator;
 use Ctrlv\Lardmin\Generators\UrlGenerator;
 use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
+use Ctrlv\Lardmin\TableColumnsTransformer\ColumnTypes\ColumnTypesStaticFactory;
 use Ctrlv\Lardmin\TableColumnsTransformer\TableColumnsTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -106,17 +107,15 @@ class Lardmin extends LardminBaseController
         // Основные поля для модели
         $table_columns_transformer = new TableColumnsTransformer($this->model);
         $columns = $table_columns_transformer->getMainSectionFields();
-//        $schema_manager = Schema::getConnection()->getDoctrineSchemaManager();
-//        $columns = $schema_manager->listTableColumns($this->model->getTable());
-
-//        dd($columns);
 
 
-        $input = new Input();
-        $pageContent->push($input);
-        $pageContent->push($input);
-        $pageContent->push($input);
-        $pageContent->pushSidebar($input);
+        foreach ($columns as $column) {
+            $element = ColumnTypesStaticFactory::create($column);
+
+            $pageContent->push($element->getFormElement());
+        }
+
+//        $pageContent->pushSidebar($input);
         // Определение полей для зависимостей
 
 
