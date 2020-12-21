@@ -13,16 +13,30 @@
                         {{ $heading_row_item }}
                     </th>
                     @endforeach
+                    @if(!empty($rows[0]['actions']))
+                        @foreach($rows[0]['actions'] as $action_th)
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                        @endforeach
+                    @endif
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
 
                 @foreach($rows as $row)
                     <tr>
-                        @foreach($row as $cell)
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $cell }}</div>
-                            </td>
+                        @foreach($row as $cell_key => $cell)
+                            @if($cell_key === 'actions')
+                                @foreach($cell as $action_cell)
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="{{ $action_cell['url'] }}"
+                                       class="text-{{ $action_cell['color'] }}-600 hover:text-{{ $action_cell['color'] }}-900">{{ $action_cell['text'] }}</a>
+                                </td>
+                                @endforeach
+                            @else
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $cell }}</div>
+                                </td>
+                            @endif
                         @endforeach
                     </tr>
                 @endforeach

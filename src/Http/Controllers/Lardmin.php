@@ -58,26 +58,6 @@ class Lardmin extends LardminBaseController
      */
     public function index(ListModelMonitor $monitor) {
 
-        $monitor->watch($this->model);
-        $props = $monitor->getProperties();
-
-        $paginated = $this->model->paginate(15);
-
-        $results = [];
-        foreach ($paginated as $item) {
-            $_result = [];
-            foreach ($props as $key => $prop) {
-
-                if (is_callable($prop)) {
-                    $value = $prop($item->{$key});
-                } else {
-                    $value = $item->{$prop};
-                }
-
-                $_result[] = $value;
-            }
-            $results[] = $_result;
-        }
 
         $pageContent = new FullWidthContent();
         $pageContent->setHeading("Все записи");
@@ -85,7 +65,35 @@ class Lardmin extends LardminBaseController
 
         $pageContent->addLinkAction('Добавить', $this->url_generator->getCreateUrl());
 
-//        dd($pageContent);
+        $monitor->watch($this->model);
+        $props = $monitor->getProperties();
+
+        $paginated = $this->model->paginate(15);
+
+        $results = [];
+        foreach ($paginated as $item) {
+
+            $_result = [];
+            foreach ($props as $key => $prop) {
+                $_result[] = $item->{$prop};
+            }
+
+            // Edit list action
+            $_result['actions'] = [];
+            $_result['actions']['edit'] = [
+                'url' => $this->url_generator->getEditUrl($item->id),
+                'text' => "Edit",
+                'color' => 'indigo'
+            ];
+            $_result['actions']['delete'] = [
+                'url' => $this->url_generator->getEditUrl($item->id),
+                'text' => "Delete",
+                'color' => 'red'
+            ];
+
+            $results[] = $_result;
+        }
+
 
         // todo логика для сортировки записей
         // todo логика для фильтрафии записей
@@ -95,6 +103,8 @@ class Lardmin extends LardminBaseController
             $property_name = (is_callable($item)) ? $key : $item;
             return $monitor->getPropertyTitle($property_name);
         })->toArray();
+
+
 
         $table = new Table($titles, $results);
         $table->setPagination($paginated->links());
@@ -109,26 +119,14 @@ class Lardmin extends LardminBaseController
         $pageContent->setHeading("Добавить...");
         $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
 
-        // Определение полей основного контента
-        // Основные поля для модели
+        // Model's main fields
         $table_columns_transformer = new TableColumnsTransformer($this->model);
         $columns = $table_columns_transformer->getMainSectionFields();
 
-
         foreach ($columns as $column) {
             $element = ColumnTypesStaticFactory::create($column);
-
             $pageContent->push($element->getFormElement());
         }
-
-//        $pageContent->pushSidebar($input);
-        // Определение полей для зависимостей
-
-
-        //dd($user->first()->getFillable());
-//        dd($this->model);
-        // todo логика для фильтрафии записей
-
 
         return $pageContent->getPageContent();
     }
