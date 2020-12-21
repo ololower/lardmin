@@ -97,6 +97,9 @@ class UrlGenerator {
     public function getCreatePath() {
         return $this->index_path . '/create';
     }
+    public function getCreateUrl() {
+        return url(config('lardmin.admin_url_prefix') . '/' . $this->getCreatePath());
+    }
 
 
 }

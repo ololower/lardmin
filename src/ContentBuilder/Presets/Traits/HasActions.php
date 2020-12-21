@@ -8,9 +8,27 @@ namespace Ctrlv\Lardmin\ContentBuilder\Presets\Traits;
  * @package Ctrlv\Lardmin\ContentBuilder\Presets\Traits
  */
 trait HasActions {
-    protected $actions;
 
-    public function setActions(array $actions) {
-        $this->actions = $actions;
+    protected $actions = [];
+
+    private function addAction($data) {
+        $this->actions[] = $data;
+    }
+
+    public function addSubmitAction($text, string $form, string $color = 'blue') {
+        $this->addAction([
+            'type' => "submit",
+            'form' => $form,
+            'color' => $color,
+            'text' => $text
+        ]);
+    }
+    public function addLinkAction($text, $url, $color = 'blue') {
+        $this->addAction([
+            'type' => "link",
+            'url' => $url,
+            'color' => $color,
+            'text' => $text
+        ]);
     }
 }

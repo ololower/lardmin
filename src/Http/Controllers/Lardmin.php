@@ -30,6 +30,7 @@ class Lardmin extends LardminBaseController
      * @var Model
      */
     protected $model;
+    protected $url_generator;
 
     /**
      * Генератор хлебных крошек
@@ -42,6 +43,7 @@ class Lardmin extends LardminBaseController
                                 BreadcrumbGenerator $breadcrumb_generator) {
         parent::__construct();
 
+        $this->url_generator = $url_generator;
         $this->model = $url_generator->getModel();
 
         $this->breadcrumb_generator = $breadcrumb_generator;
@@ -78,8 +80,12 @@ class Lardmin extends LardminBaseController
         }
 
         $pageContent = new FullWidthContent();
-        $pageContent->setHeading("Это просто заголовок");
+        $pageContent->setHeading("Все записи");
         $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
+
+        $pageContent->addLinkAction('Добавить', $this->url_generator->getCreateUrl());
+
+//        dd($pageContent);
 
         // todo логика для сортировки записей
         // todo логика для фильтрафии записей
