@@ -63,6 +63,7 @@ class TableColumnsTransformer {
                 'name' => $column->getName(),
                 'type' => $this->convertDbTypeToInputType($column->getType()->getName()),
                 'label' => $names[$column->getName()] ?? $column->getName(),
+                'value' => $this->model->{$column->getName()} ?? $column->getDefault()
 //                'readonly' => true,
             ];
 

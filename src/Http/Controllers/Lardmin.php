@@ -16,6 +16,7 @@ use Ctrlv\Lardmin\TableColumnsTransformer\TableColumnsTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\View\View;
 
 /**
  * Class Lardmin
@@ -115,24 +116,15 @@ class Lardmin extends LardminBaseController
     }
 
     public function create() {
-        $pageContent = new SidebarContent();
-        $pageContent->setHeading("Добавить...");
-        $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
-
-        // Model's main fields
-        $table_columns_transformer = new TableColumnsTransformer($this->model);
-        $columns = $table_columns_transformer->getMainSectionFields();
-
-        foreach ($columns as $column) {
-            $element = ColumnTypesStaticFactory::create($column);
-            $pageContent->push($element->getFormElement());
-        }
-
-        return $pageContent->getPageContent();
+        return $this->getForm($this->model);
     }
 
-    public function show() {
-        //
+    // todo подумать над тем, чтобы объеденить реализацию с методом create
+    public function show($id) {
+
+        $model = $this->model->findOrFail($id);
+
+        return $this->getForm($model);
     }
 
     public function store() {
@@ -141,6 +133,23 @@ class Lardmin extends LardminBaseController
 
     public function delete() {
         //
+    }
+
+    private function getForm(Model $model) {
+        $pageContent = new SidebarContent();
+        $pageContent->setHeading("Добавить...");
+        $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
+
+        // Model's main fields
+        $table_columns_transformer = new TableColumnsTransformer($model);
+        $columns = $table_columns_transformer->getMainSectionFields();
+
+        foreach ($columns as $column) {
+            $element = ColumnTypesStaticFactory::create($column);
+            $pageContent->push($element->getFormElement());
+        }
+
+        return $pageContent->getPageContent();
     }
 
 
