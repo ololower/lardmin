@@ -11,6 +11,8 @@ use Ctrlv\Lardmin\ContentBuilder\PageContent;
 use Ctrlv\Lardmin\ContentBuilder\Presets\Traits\HasActions;
 use Ctrlv\Lardmin\ContentBuilder\Presets\Traits\HasBreadcrumbs;
 use Ctrlv\Lardmin\ContentBuilder\Presets\Traits\HasHeading;
+use Ctrlv\Lardmin\ContentBuilder\Wrappers\Wrapper;
+use Ctrlv\Lardmin\ContentBuilder\Wrappers\Wrapperable;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -24,13 +26,16 @@ use Illuminate\Contracts\View\View;
  */
 class SidebarContent extends PageContent {
 
-    use HasBreadcrumbs, HasHeading, HasActions;
+    use HasBreadcrumbs,
+        HasHeading,
+        HasActions;
 
     /**
      * Контейнер в который будут добавлены все динамические элементы страницы
      * @var FullWidthContainer
      */
     private $container;
+    private $container_wrappers = [];
 
     public function __construct() {
         $this->container = new SidebarContainer();
@@ -51,8 +56,19 @@ class SidebarContent extends PageContent {
         $this->container->pushSidebar($element);
     }
 
+    public function addContainerWrapper(Wrapper $wrapper)
+    {
+        $this->container_wrappers[] = $wrapper;
+    }
+
     public function getPageContent() : View
     {
+        foreach ($this->container_wrappers as $container_wrapper) {
+            if ($this->container instanceof Wrapperable) {
+                $this->container->addWrapper($container_wrapper);
+            }
+        }
+
         array_unshift($this->elements, $this->container);
         array_unshift($this->elements, (new WelcomeHeading($this->heading, $this->actions)));
         array_unshift($this->elements, (new Breadcrumbs($this->breadcrumbs)));

@@ -1,4 +1,5 @@
 <div id="content" class="min-h-screen">
+    @include('lardmin::page-content.wrappers.open')
     <div class="flex space-x-4">
         @if(isset($_children['sidebar']))
             <div class="w-4/6 bg-white p-4 br-4 rounded-lg shadow">
@@ -19,4 +20,5 @@
             </div>
         @endif
     </div>
+    @include('lardmin::page-content.wrappers.open')
 </div>

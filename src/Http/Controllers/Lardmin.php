@@ -8,6 +8,7 @@ use Ctrlv\Lardmin\ContentBuilder\Elements\Forms\Input;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
 use Ctrlv\Lardmin\ContentBuilder\Presets\SidebarContent;
+use Ctrlv\Lardmin\ContentBuilder\Wrappers\CustomWrapper;
 use Ctrlv\Lardmin\Generators\BreadcrumbGenerator;
 use Ctrlv\Lardmin\Generators\UrlGenerator;
 use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
@@ -139,6 +140,9 @@ class Lardmin extends LardminBaseController
         $pageContent = new SidebarContent();
         $pageContent->setHeading("Добавить...");
         $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
+
+        $formWrapper = new CustomWrapper('<form>@csrf', '</form>');
+        $pageContent->addContainerWrapper($formWrapper);
 
         // Model's main fields
         $table_columns_transformer = new TableColumnsTransformer($model);
