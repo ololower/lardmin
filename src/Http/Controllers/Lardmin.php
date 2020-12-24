@@ -9,6 +9,7 @@ use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
 use Ctrlv\Lardmin\ContentBuilder\Presets\SidebarContent;
 use Ctrlv\Lardmin\ContentBuilder\Wrappers\CustomWrapper;
+use Ctrlv\Lardmin\ContentBuilder\Wrappers\FormWrapper;
 use Ctrlv\Lardmin\Generators\BreadcrumbGenerator;
 use Ctrlv\Lardmin\Generators\UrlGenerator;
 use Ctrlv\Lardmin\ModelMonitor\ListModelMonitor;
@@ -117,7 +118,8 @@ class Lardmin extends LardminBaseController
     }
 
     public function create() {
-        return $this->getForm($this->model);
+        $formWrapper = new FormWrapper($this->url_generator->getCreateUrl(), 'post', 'create', true);
+        return $this->getForm($this->model, $formWrapper);
     }
 
     // todo подумать над тем, чтобы объеденить реализацию с методом create
@@ -125,7 +127,9 @@ class Lardmin extends LardminBaseController
 
         $model = $this->model->findOrFail($id);
 
-        return $this->getForm($model);
+        $formWrapper = new FormWrapper($this->url_generator->getEditUrl($id), 'post', 'edit', true);
+
+        return $this->getForm($model, $formWrapper);
     }
 
     public function store() {
@@ -136,12 +140,13 @@ class Lardmin extends LardminBaseController
         //
     }
 
-    private function getForm(Model $model) {
+    private function getForm(Model $model, FormWrapper $formWrapper) {
         $pageContent = new SidebarContent();
         $pageContent->setHeading("Добавить...");
         $pageContent->setBreadcrumbs($this->breadcrumb_generator->getBreadcrumbsItems());
+        $pageContent->addSubmitAction('Сохранить', $formWrapper->getFormNameAttribute());
 
-        $formWrapper = new CustomWrapper('<form>@csrf', '</form>');
+
         $pageContent->addContainerWrapper($formWrapper);
 
         // Model's main fields

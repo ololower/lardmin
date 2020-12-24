@@ -20,5 +20,5 @@
             </div>
         @endif
     </div>
-    @include('lardmin::page-content.wrappers.open')
+    @include('lardmin::page-content.wrappers.close')
 </div>

@@ -9,7 +9,7 @@
             @if($action['type'] === 'submit')
                 <button
                     type="submit"
-                    form="{{ $form }}"
+                    form="{{ $action['form'] }}"
                     class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow">
                     {{ $action['text'] }}
                 </button>
