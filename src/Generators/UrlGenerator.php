@@ -101,11 +101,23 @@ class UrlGenerator {
         return url(config('lardmin.admin_url_prefix') . '/' . $this->getCreatePath());
     }
 
-    public function getEditPath() {
+    public function getShowPath() {
         return $this->index_path . '/{id}';
     }
-    public function getEditUrl($item_id) {
+
+    public function getShowUrl($item_id) {
         return url(config('lardmin.admin_url_prefix') . '/' . $this->index_path . '/' . $item_id);
     }
+
+    public function getStorePath() {
+        return $this->getCreatePath();
+    }
+
+    public function getEditPath() {
+        return $this->getShowPath();
+    }
+
+
+
 
 }
