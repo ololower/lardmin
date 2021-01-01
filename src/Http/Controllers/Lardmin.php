@@ -84,12 +84,12 @@ class Lardmin extends LardminBaseController
             // Edit list action
             $_result['actions'] = [];
             $_result['actions']['edit'] = [
-                'url' => $this->url_generator->getEditUrl($item->id),
+                'url' => $this->url_generator->getShowUrl($item->id),
                 'text' => "Edit",
                 'color' => 'indigo'
             ];
             $_result['actions']['delete'] = [
-                'url' => $this->url_generator->getEditUrl($item->id),
+                'url' => $this->url_generator->getShowUrl($item->id),
                 'text' => "Delete",
                 'color' => 'red'
             ];
@@ -127,13 +127,28 @@ class Lardmin extends LardminBaseController
 
         $model = $this->model->findOrFail($id);
 
-        $formWrapper = new FormWrapper($this->url_generator->getEditUrl($id), 'post', 'edit', true);
+        $formWrapper = new FormWrapper($this->url_generator->getShowUrl($id), 'post', 'edit', true);
 
         return $this->getForm($model, $formWrapper);
     }
 
-    public function store() {
+    public function store(Request $request) {
 
+        // validate request
+        $table_columns_transformer = new TableColumnsTransformer($this->model);
+        $validation_rules = $table_columns_transformer->getMainSectionValidationRules();
+        $request->validate($validation_rules);
+
+        // save main section fields
+        $table_columns_transformer->getMainSectionFields()->each(function ($field, $key) use ($request) {
+            $this->model->{$key} = $request->get($key);
+        });
+
+        $this->model->save();
+    }
+
+    public function edit(Request $request) {
+        dd($request->all());
     }
 
     public function delete() {
@@ -148,6 +163,7 @@ class Lardmin extends LardminBaseController
 
 
         $pageContent->addContainerWrapper($formWrapper);
+
 
         // Model's main fields
         $table_columns_transformer = new TableColumnsTransformer($model);
