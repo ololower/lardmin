@@ -5,7 +5,11 @@
            type='{{ $type }}'
            name="{{ $name }}"
            placeholder='{{ $placeholder }}'
-           value="{{ $value }}"
+           value="{{ old($name, $value) }}"
            @if ($readonly) readonly="true" disabled @endif
            >
+    @if(isset($errors) && $errors->has($name))
+    <div class="text-xs font-semibold tracking-wide	text-red-400 pt-1">{{ $errors->first($name) }}</div>
+    @endif
+
 </div>
