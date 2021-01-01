@@ -45,7 +45,13 @@ class TableColumnsTransformer {
      * При установке полей учитываются поля, которые заданы у модели
      */
     private function setMainSectionColumns() {
-        $columns = collect($this->schema_manager->listTableColumns($this->model->getTable()));
+
+        $editable_fields_names = $this->model->editableFieldsNames ?? [];
+
+        $columns = collect($this->schema_manager->listTableColumns($this->model->getTable()))
+        ->filter(function (Column $item) use ($editable_fields_names) {
+            return (empty($editable_fields_names) || in_array($item->getName(), $editable_fields_names));
+        });
 
         $this->main_section_columns = $columns->toArray();
     }
@@ -57,6 +63,7 @@ class TableColumnsTransformer {
     public function getMainSectionFields() {
 
         $names = $this->model->listPropsNames ?? [];
+
         return collect($this->main_section_columns)->mapWithKeys(function (Column $column, $column_name) use ($names) {
 
             $props = [
@@ -71,8 +78,24 @@ class TableColumnsTransformer {
         });
     }
 
+    /**
+     * Default validation rules from doctrine's columns
+     * @return array
+     */
     public function getMainSectionValidationRules() {
+        return collect($this->main_section_columns)->map(function (Column $column) {
+            $rules = [];
 
+            if ($column->getNotnull()) {
+                $rules[] = 'required';
+            }
+
+            return $rules;
+        })->filter(function ($rules) {
+            return count($rules);
+        })->map(function ($rules) {
+            return implode("|", $rules);
+        })->toArray();
     }
 
     private function convertDbTypeToInputType(string $db_type) {
