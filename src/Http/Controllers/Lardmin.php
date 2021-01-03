@@ -4,6 +4,8 @@ namespace Ctrlv\Lardmin\Http\Controllers;
 
 
 use App\Models\User;
+use Ctrlv\Lardmin\ContentBuilder\Elements\Forms\Alert;
+use Ctrlv\Lardmin\ContentBuilder\Elements\Forms\Error;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Forms\Input;
 use Ctrlv\Lardmin\ContentBuilder\Elements\Table\Table;
 use Ctrlv\Lardmin\ContentBuilder\Presets\FullWidthContent;
@@ -18,6 +20,7 @@ use Ctrlv\Lardmin\TableColumnsTransformer\TableColumnsTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 /**
@@ -144,7 +147,16 @@ class Lardmin extends LardminBaseController
             $this->model->{$key} = $request->get($key);
         });
 
-        $this->model->save();
+        try {
+            $this->model->save();
+            return redirect($this->url_generator->getIndexUrl())->with([
+                'success_message' => "Record saved"
+            ]);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with([
+                'error_message' => $exception->getMessage()
+            ]);
+        }
     }
 
     public function edit(Request $request) {
@@ -164,6 +176,9 @@ class Lardmin extends LardminBaseController
 
         $pageContent->addContainerWrapper($formWrapper);
 
+        if (Session::has('error_message')) {
+            $pageContent->push(new Alert(Session::get('error_message'), Alert::ALERT_ERROR));
+        }
 
         // Model's main fields
         $table_columns_transformer = new TableColumnsTransformer($model);
