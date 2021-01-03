@@ -143,9 +143,16 @@ class Lardmin extends LardminBaseController
         $request->validate($validation_rules);
 
         // save main section fields
-        $table_columns_transformer->getMainSectionFields()->each(function ($field, $key) use ($request) {
-            $this->model->{$key} = $request->get($key);
-        });
+
+        $form_props = $this->getFormProps();
+        $table_columns_transformer->getMainSectionFields()
+            ->each(function ($field, $key) use ($request, $form_props) {
+                if (isset($form_props[$key]) && is_callable($form_props[$key]['transform'])) {
+                    $this->model->{$key} = $form_props[$key]['transform']($request->get($key));
+                } else {
+                    $this->model->{$key} = $request->get($key);
+                }
+            });
 
         try {
             $this->model->save();
