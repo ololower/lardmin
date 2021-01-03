@@ -12,7 +12,8 @@ final class ColumnTypesStaticFactory {
         if (!isset($props['label'])) throw new \Exception("Missing label param");
 
         switch ($props['type']) {
-
+            case 'textarea':
+//                break;
             default:
                 $column_type = new TextColumnType($props);
         }

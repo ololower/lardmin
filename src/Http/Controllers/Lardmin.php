@@ -139,7 +139,7 @@ class Lardmin extends LardminBaseController
 
         // validate request
         $table_columns_transformer = new TableColumnsTransformer($this->model);
-        $validation_rules = $table_columns_transformer->getMainSectionValidationRules();
+        $validation_rules = $table_columns_transformer->getMainSectionValidationRules($this->getFormProps());
         $request->validate($validation_rules);
 
         // save main section fields
@@ -182,7 +182,7 @@ class Lardmin extends LardminBaseController
 
         // Model's main fields
         $table_columns_transformer = new TableColumnsTransformer($model);
-        $columns = $table_columns_transformer->getMainSectionFields();
+        $columns = $table_columns_transformer->getMainSectionFields($this->getFormProps());
 
         foreach ($columns as $column) {
             $element = ColumnTypesStaticFactory::create($column);
@@ -192,5 +192,11 @@ class Lardmin extends LardminBaseController
         return $pageContent->getPageContent();
     }
 
-
+    /**
+     * Customer parameters for building form
+     * @return array
+     */
+    private function getFormProps() {
+        return is_callable([$this->model, 'formProps']) ? $this->model->formProps() : [];
+    }
 }
