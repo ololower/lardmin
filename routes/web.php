@@ -22,5 +22,16 @@ Route::prefix(config('lardmin.admin_url_prefix'))
         }
     }
 
+    Route::get('login', function () {
+        return view('lardmin::auth.login');
+    });
+
+    Route::get('register', function () {
+        return view('lardmin::auth.register');
+    });
+
+    Route::get('reset', function () {
+        return view('lardmin::auth.login');
+    });
 });
 

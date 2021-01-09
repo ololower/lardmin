@@ -14,17 +14,16 @@ class BreadcrumbGenerator {
     private $breadcrumb_items = [];
     private $menu_items = [];
 
-    public function __construct(UrlGenerator $url_generator) {
+    public function __construct(UrlGenerator $url_generator, MenuGenerator $menu_generator) {
         $this->url_generator = $url_generator;
 
-        $menu_generator = new MenuGenerator();
         $this->menu_items = $menu_generator->getMenuItems();
 
         $this->attemptGenerate();
     }
 
     /**
-     * Добавить новый пункт хлебных крошек
+     * Add new breadcrumb item
      * @param string $title
      * @param string $url
      */
@@ -36,7 +35,7 @@ class BreadcrumbGenerator {
     }
 
     /**
-     * Получить все элементы для хлебных крошек
+     * Get all breadcrumb items as an array
      * @return array
      */
     public function getBreadcrumbsItems() {
@@ -44,7 +43,7 @@ class BreadcrumbGenerator {
     }
 
     /**
-     * Пытаемся создать URL из текущей модели
+     * Attempt to generate breadcrumb items based on current model
      */
     private function attemptGenerate() {
 
